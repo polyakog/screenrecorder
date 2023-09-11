@@ -7,6 +7,7 @@ import { colorsTheme } from './../styles/StyledComponents/Common/colors';
 import { Button } from '@/Common/Components/Button/Button'
 import { ThemeButton } from '@/Common/Enum/themeButton'
 
+
 const inter = Inter({ subsets: ['latin'] })
 
 export default function Home() {
@@ -14,8 +15,9 @@ export default function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-10">
       <Title>VIDEO SCREEN RECORDER</Title>
-xvcxvv
-      <Button theme={ThemeButton.OUTLINED} onClick={()=>router.push(Path.RECORDER)}>Go</Button>
+Record your vidio from screen or camera 
+      <Button theme={ThemeButton.PRIMARY} onClick={()=>router.push(Path.RECORDER)}>Recorder</Button>
+      <Button theme={ThemeButton.PRIMARY} onClick={()=>router.push(Path.MEDIARECORDER)}>Video Recorder</Button>
     </main>
   )
 }

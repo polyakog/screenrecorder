@@ -72,6 +72,8 @@ const Recorder2 = () => {
             console.error("catch error", error);
         }
     }
+
+    
     return (
         <div>
 

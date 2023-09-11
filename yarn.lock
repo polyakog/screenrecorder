@@ -1025,7 +1025,7 @@
   resolved "https://registry.yarnpkg.com/@babel/regjsgen/-/regjsgen-0.8.0.tgz#f0ba69b075e1f05fb2825b7fad991e7adbb18310"
   integrity sha512-x/rqGMdzj+fWZvCOYForTghzbtqPDZ5gPwaoNGHdgDfF2QA/XZbCBp4Moo5scrkAMPhB7z26XM/AaHuIJdgauA==
 
-"@babel/runtime@^7.12.5", "@babel/runtime@^7.18.3", "@babel/runtime@^7.18.9", "@babel/runtime@^7.20.6", "@babel/runtime@^7.20.7", "@babel/runtime@^7.21.0", "@babel/runtime@^7.22.10", "@babel/runtime@^7.22.6", "@babel/runtime@^7.5.5", "@babel/runtime@^7.8.4", "@babel/runtime@^7.8.7":
+"@babel/runtime@^7.12.1", "@babel/runtime@^7.12.5", "@babel/runtime@^7.18.3", "@babel/runtime@^7.18.9", "@babel/runtime@^7.20.6", "@babel/runtime@^7.20.7", "@babel/runtime@^7.21.0", "@babel/runtime@^7.22.10", "@babel/runtime@^7.22.6", "@babel/runtime@^7.5.5", "@babel/runtime@^7.8.4", "@babel/runtime@^7.8.7", "@babel/runtime@^7.9.2":
   version "7.22.15"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.22.15.tgz#38f46494ccf6cf020bd4eed7124b425e83e523b8"
   integrity sha512-T0O+aa+4w0u06iNmapipJXMV4HoUir03hpx3/YqXXhu9xim3w+dVphjFWl1OH8NbZHw5Lbm9k45drDkgq2VNNA==
@@ -1466,6 +1466,16 @@
   resolved "https://registry.yarnpkg.com/@popperjs/core/-/core-2.11.8.tgz#6b79032e760a0899cd4204710beede972a3a185f"
   integrity sha512-P1st0aksCrn9sGZhp8GMYwBnQsbvAWsZAX44oXNNvLHGqAOcoVxmjZiohstwQ7SqKnbR47akdNi+uleWD8+g6A==
 
+"@reduxjs/toolkit@^1.9.5":
+  version "1.9.5"
+  resolved "https://registry.yarnpkg.com/@reduxjs/toolkit/-/toolkit-1.9.5.tgz#d3987849c24189ca483baa7aa59386c8e52077c4"
+  integrity sha512-Rt97jHmfTeaxL4swLRNPD/zV4OxTes4la07Xc4hetpUW/vc75t5m1ANyxG6ymnEQ2FsLQsoMlYB2vV1sO3m8tQ==
+  dependencies:
+    immer "^9.0.21"
+    redux "^4.2.1"
+    redux-thunk "^2.4.2"
+    reselect "^4.1.8"
+
 "@rushstack/eslint-patch@^1.1.3":
   version "1.3.3"
   resolved "https://registry.yarnpkg.com/@rushstack/eslint-patch/-/eslint-patch-1.3.3.tgz#16ab6c727d8c2020a5b6e4a176a243ecd88d8d69"
@@ -1477,6 +1487,14 @@
   integrity sha512-sJ902EfIzn1Fa+qYmjdQqh8tPsoxyBz+8yBKC2HKUxyezKJFwPGOn7pv4WY6QuQW//ySQi5lJjA/ZT9sNWWNTg==
   dependencies:
     tslib "^2.4.0"
+
+"@types/hoist-non-react-statics@^3.3.1":
+  version "3.3.1"
+  resolved "https://registry.yarnpkg.com/@types/hoist-non-react-statics/-/hoist-non-react-statics-3.3.1.tgz#1124aafe5118cb591977aeb1ceaaed1070eb039f"
+  integrity sha512-iMIqiko6ooLrTh1joXodJK5X9xeEALT1kM5G3ZLhD3hszxBdIEd5C75U834D9mLcINgD4OyZf5uQXjkuYydWvA==
+  dependencies:
+    "@types/react" "*"
+    hoist-non-react-statics "^3.3.0"
 
 "@types/json5@^0.0.29":
   version "0.0.29"
@@ -1542,6 +1560,11 @@
   version "4.2.0"
   resolved "https://registry.yarnpkg.com/@types/stylis/-/stylis-4.2.0.tgz#199a3f473f0c3a6f6e4e1b17cdbc967f274bdc6b"
   integrity sha512-n4sx2bqL0mW1tvDf/loQ+aMX7GQD3lc3fkCMC55VFNDu/vBOabO+LTIeXKM14xK0ppk5TUGcWRjiSpIlUpghKw==
+
+"@types/use-sync-external-store@^0.0.3":
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/@types/use-sync-external-store/-/use-sync-external-store-0.0.3.tgz#b6725d5f4af24ace33b36fafd295136e75509f43"
+  integrity sha512-EwmlvuaxPNej9+T4v5AuBPJa2x2UOJVdjCtDHgcDqitUeOtjnJKJ+apYjVcAoBEMjKW1VVFGZLUb5+qqa09XFA==
 
 "@typescript-eslint/parser@^5.4.2 || ^6.0.0":
   version "6.6.0"
@@ -2510,7 +2533,7 @@ extendable-media-recorder-wav-encoder-worker@^8.0.86:
     tslib "^2.6.1"
     worker-factory "^7.0.9"
 
-extendable-media-recorder-wav-encoder@^7.0.68:
+extendable-media-recorder-wav-encoder@^7.0.68, extendable-media-recorder-wav-encoder@^7.0.85:
   version "7.0.96"
   resolved "https://registry.yarnpkg.com/extendable-media-recorder-wav-encoder/-/extendable-media-recorder-wav-encoder-7.0.96.tgz#a04407366dce627b0f5ebae87f17082e4477a735"
   integrity sha512-xNwVUeajBMsrgdiMEcakZ/0LCmcvnn6ZRCT5TTfQe8VqMPCJJyrW+0KyEgqzBEe2bQmq8dEpIMzzYg+5BnIzMA==
@@ -2532,6 +2555,19 @@ extendable-media-recorder@^6.6.5:
     standardized-audio-context "^25.3.29"
     subscribable-things "^2.1.6"
     tslib "^2.4.0"
+
+extendable-media-recorder@^7.1.9:
+  version "7.1.22"
+  resolved "https://registry.yarnpkg.com/extendable-media-recorder/-/extendable-media-recorder-7.1.22.tgz#8b2177ffeb96e9d8a97354105b0b3cdbf434b14b"
+  integrity sha512-MYaknwradvtQKrPJZQVXBBS8HngT0/7gye41TPM3WlbRXCBkcLi680aRxdbKn0/Tw3sCrdLUaceYUriR59IXQQ==
+  dependencies:
+    "@babel/runtime" "^7.22.6"
+    media-encoder-host "^8.0.98"
+    multi-buffer-data-view "^5.0.7"
+    recorder-audio-worklet "^6.0.12"
+    standardized-audio-context "^25.3.54"
+    subscribable-things "^2.1.22"
+    tslib "^2.6.0"
 
 fast-deep-equal@^3.1.1, fast-deep-equal@^3.1.3:
   version "3.1.3"
@@ -2849,7 +2885,7 @@ has@^1.0.3:
   dependencies:
     function-bind "^1.1.1"
 
-hoist-non-react-statics@^3.3.1:
+hoist-non-react-statics@^3.3.0, hoist-non-react-statics@^3.3.1, hoist-non-react-statics@^3.3.2:
   version "3.3.2"
   resolved "https://registry.yarnpkg.com/hoist-non-react-statics/-/hoist-non-react-statics-3.3.2.tgz#ece0acaf71d62c2969c2ec59feff42a4b1a85b45"
   integrity sha512-/gGivxi8JPKWNm/W0jSmzcMPpfpPLc3dY/6GxhX2hQ9iGj3aDfklV4ET7NjKpSinLpJ5vafa9iiGIEZg10SfBw==
@@ -2860,6 +2896,11 @@ ignore@^5.2.0:
   version "5.2.4"
   resolved "https://registry.yarnpkg.com/ignore/-/ignore-5.2.4.tgz#a291c0c6178ff1b960befe47fcdec301674a6324"
   integrity sha512-MAb38BcSbH0eHNBxn7ql2NH/kX33OkB3lZ1BNdh7ENeRChHTYsTvWrMubiIAMNS2llXEEgZ1MUOBtXChP3kaFQ==
+
+immer@^9.0.21:
+  version "9.0.21"
+  resolved "https://registry.yarnpkg.com/immer/-/immer-9.0.21.tgz#1e025ea31a40f24fb064f1fef23e931496330176"
+  integrity sha512-bc4NBHqOqSfRW7POMkHd51LvClaeMXpm8dx0e8oE2GORbq5aRK7Bxl4FyzVLdGtLmvLKL7BTDBG5ACQm4HWjTA==
 
 import-fresh@^3.2.1:
   version "3.3.0"
@@ -3275,7 +3316,7 @@ media-encoder-host-worker@^9.1.11:
     tslib "^2.6.1"
     worker-factory "^7.0.9"
 
-media-encoder-host@^8.0.76:
+media-encoder-host@^8.0.76, media-encoder-host@^8.0.98:
   version "8.0.99"
   resolved "https://registry.yarnpkg.com/media-encoder-host/-/media-encoder-host-8.0.99.tgz#7a0a2c274cad1a869f763f048db5ab9c7ffe4059"
   integrity sha512-F+4v70AsYbDO4d9TusWDDeSbdJuRK5XlcAsv29o2vbv4Cn212WwR78w9MYEq0iBAkkHg9/aLrJpog3Yhz5BzFQ==
@@ -3327,6 +3368,14 @@ multi-buffer-data-view@^3.0.20:
   dependencies:
     "@babel/runtime" "^7.20.6"
     tslib "^2.4.1"
+
+multi-buffer-data-view@^5.0.7:
+  version "5.0.9"
+  resolved "https://registry.yarnpkg.com/multi-buffer-data-view/-/multi-buffer-data-view-5.0.9.tgz#64580d0d9c5e3f78d9bfd1594a75e2ec3608ed53"
+  integrity sha512-Tiuwtmzukxgfn7OvN4vplX6HuDJp4Fk+NsvGLYStii0DjE4pXa564WH41D4dJ2AtBA7kxwFRJOMavUD1mKDpjQ==
+  dependencies:
+    "@babel/runtime" "^7.22.6"
+    tslib "^2.6.1"
 
 mz@^2.7.0:
   version "2.7.0"
@@ -3670,10 +3719,18 @@ react-is@^16.13.1, react-is@^16.7.0:
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.13.1.tgz#789729a4dc36de2999dc156dd6c1d9c18cea56a4"
   integrity sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==
 
-react-is@^18.2.0:
+react-is@^18.0.0, react-is@^18.2.0:
   version "18.2.0"
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-18.2.0.tgz#199431eeaaa2e09f86427efbb4f1473edb47609b"
   integrity sha512-xWGDIW6x921xtzPkhiULtthJHoJvBbF3q26fzloPCK0hsvxtPVelvftw3zjbHWSkR2km9Z+4uxbDDK/6Zw9B8w==
+
+react-media-recorder-2@^1.6.23:
+  version "1.6.23"
+  resolved "https://registry.yarnpkg.com/react-media-recorder-2/-/react-media-recorder-2-1.6.23.tgz#f862202aad39eb596dd4445d23ddabc0224aa288"
+  integrity sha512-hwCteUOn/3/77qOiRtFRmAtLM97aez+I/KApP7e5BLXbIlN5tGnEy3ZmZHe+ag0iZas9wKMBxCA0qoh5jGGP6g==
+  dependencies:
+    extendable-media-recorder "^7.1.9"
+    extendable-media-recorder-wav-encoder "^7.0.85"
 
 react-media-recorder@^1.6.6:
   version "1.6.6"
@@ -3682,6 +3739,18 @@ react-media-recorder@^1.6.6:
   dependencies:
     extendable-media-recorder "^6.6.5"
     extendable-media-recorder-wav-encoder "^7.0.68"
+
+react-redux@^8.1.2:
+  version "8.1.2"
+  resolved "https://registry.yarnpkg.com/react-redux/-/react-redux-8.1.2.tgz#9076bbc6b60f746659ad6d51cb05de9c5e1e9188"
+  integrity sha512-xJKYI189VwfsFc4CJvHqHlDrzyFTY/3vZACbE+rr/zQ34Xx1wQfB4OTOSeOSNrF6BDVe8OOdxIrAnMGXA3ggfw==
+  dependencies:
+    "@babel/runtime" "^7.12.1"
+    "@types/hoist-non-react-statics" "^3.3.1"
+    "@types/use-sync-external-store" "^0.0.3"
+    hoist-non-react-statics "^3.3.2"
+    react-is "^18.0.0"
+    use-sync-external-store "^1.0.0"
 
 react-transition-group@^4.4.5:
   version "4.4.5"
@@ -3722,6 +3791,14 @@ recorder-audio-worklet-processor@^4.2.21:
     "@babel/runtime" "^7.21.0"
     tslib "^2.5.0"
 
+recorder-audio-worklet-processor@^5.0.8:
+  version "5.0.8"
+  resolved "https://registry.yarnpkg.com/recorder-audio-worklet-processor/-/recorder-audio-worklet-processor-5.0.8.tgz#6a18f849ba34db0b5a450613cc340be5ecbd16c3"
+  integrity sha512-TBN5M+ZFG4F573sJKgYsvlBnhQGV0lxOBRTEP+gkezaArZK8EBpN1QgmcldWY4Ay3ZNJnLLDWDWdhoi0A+mzWQ==
+  dependencies:
+    "@babel/runtime" "^7.22.6"
+    tslib "^2.6.1"
+
 recorder-audio-worklet@^5.1.26:
   version "5.1.39"
   resolved "https://registry.yarnpkg.com/recorder-audio-worklet/-/recorder-audio-worklet-5.1.39.tgz#7bbffd2d4e7028e0954c68350e50177e05acaa7f"
@@ -3735,6 +3812,32 @@ recorder-audio-worklet@^5.1.26:
     subscribable-things "^2.1.14"
     tslib "^2.5.0"
     worker-factory "^6.0.76"
+
+recorder-audio-worklet@^6.0.12:
+  version "6.0.13"
+  resolved "https://registry.yarnpkg.com/recorder-audio-worklet/-/recorder-audio-worklet-6.0.13.tgz#e1f46238979e260a1bb78fbf29c71ab5c5644270"
+  integrity sha512-wT1ZwG1C5BAbGiKOEOAyvPjxb1zMxnxa6B3NaTwY0Jq5yjU8koqVCH7VO0YhYeVGtWFTSS916CuyyoRXTOVZkQ==
+  dependencies:
+    "@babel/runtime" "^7.22.6"
+    broker-factory "^3.0.84"
+    fast-unique-numbers "^8.0.7"
+    recorder-audio-worklet-processor "^5.0.8"
+    standardized-audio-context "^25.3.55"
+    subscribable-things "^2.1.23"
+    tslib "^2.6.1"
+    worker-factory "^7.0.9"
+
+redux-thunk@^2.4.2:
+  version "2.4.2"
+  resolved "https://registry.yarnpkg.com/redux-thunk/-/redux-thunk-2.4.2.tgz#b9d05d11994b99f7a91ea223e8b04cf0afa5ef3b"
+  integrity sha512-+P3TjtnP0k/FEjcBL5FZpoovtvrTNT/UXd4/sluaSyrURlSlhLSzEdfsTBW7WsKB6yPvgd7q/iZPICFjW4o57Q==
+
+redux@^4.2.1:
+  version "4.2.1"
+  resolved "https://registry.yarnpkg.com/redux/-/redux-4.2.1.tgz#c08f4306826c49b5e9dc901dee0452ea8fce6197"
+  integrity sha512-LAUYz4lc+Do8/g7aeRa8JkyDErK6ekstQaqWQrNRW//MY1TvCEpMtpTWvlQ+FPbWCx+Xixu/6SHt5N0HR+SB4w==
+  dependencies:
+    "@babel/runtime" "^7.9.2"
 
 reflect.getprototypeof@^1.0.3:
   version "1.0.4"
@@ -3799,6 +3902,11 @@ regjsparser@^0.9.1:
   integrity sha512-dQUtn90WanSNl+7mQKcXAgZxvUe7Z0SqXlgzv0za4LwiUhyzBC58yQO3liFoUgu8GiJVInAhJjkj1N0EtQ5nkQ==
   dependencies:
     jsesc "~0.5.0"
+
+reselect@^4.1.8:
+  version "4.1.8"
+  resolved "https://registry.yarnpkg.com/reselect/-/reselect-4.1.8.tgz#3f5dc671ea168dccdeb3e141236f69f02eaec524"
+  integrity sha512-ab9EmR80F/zQTMNeneUr4cv+jSwPJgIlvEmVwLerwrWVbpLlBuls9XHzIeTFy4cegU2NHBp3va0LKOzU5qFEYQ==
 
 resolve-from@^4.0.0:
   version "4.0.0"
@@ -3941,7 +4049,7 @@ source-map@^0.5.7:
   resolved "https://registry.yarnpkg.com/source-map/-/source-map-0.5.7.tgz#8a039d2d1021d22d1ea14c80d8ea468ba2ef3fcc"
   integrity sha512-LbrmJOMUSdEVxIKvdcJzQC+nQhe8FUZQTXQy6+I75skNgn3OoQ0DZA8YnFa7gp8tqtL3KPf1kmo0R5DoApeSGQ==
 
-standardized-audio-context@^25.3.29, standardized-audio-context@^25.3.41:
+standardized-audio-context@^25.3.29, standardized-audio-context@^25.3.41, standardized-audio-context@^25.3.54, standardized-audio-context@^25.3.55:
   version "25.3.55"
   resolved "https://registry.yarnpkg.com/standardized-audio-context/-/standardized-audio-context-25.3.55.tgz#4d87ea6052de80ecf5abf56eb71ecd71f7e52e4e"
   integrity sha512-ym9g7FZ5S1FykbQ1///ktTJgk+zTtGF1hGR/BFRQjRkN6G2Xy9GbL5kOcM7DlzflV2yJtqVwfU2gL042b1oHwg==
@@ -4055,7 +4163,7 @@ stylis@^4.3.0:
   resolved "https://registry.yarnpkg.com/stylis/-/stylis-4.3.0.tgz#abe305a669fc3d8777e10eefcfc73ad861c5588c"
   integrity sha512-E87pIogpwUsUwXw7dNyU4QDjdgVMy52m+XEOPEKUn161cCzWjjhPSQhByfd1CcNvrOLnXQ6OnnZDwnJrz/Z4YQ==
 
-subscribable-things@^2.1.14, subscribable-things@^2.1.6:
+subscribable-things@^2.1.14, subscribable-things@^2.1.22, subscribable-things@^2.1.23, subscribable-things@^2.1.6:
   version "2.1.23"
   resolved "https://registry.yarnpkg.com/subscribable-things/-/subscribable-things-2.1.23.tgz#049ecb0997c4351d3917cb14c217e5f72fbd00cf"
   integrity sha512-ks4rvqxofzIcXzOdRUCoNbAptNzsoa1LEJEbJBCy/ADahzWNEiy1Oa3LpRVw12QcTGUXHblxO4Gpb+JQNjprKQ==
@@ -4180,7 +4288,7 @@ tsconfig-paths@^3.14.2:
     minimist "^1.2.6"
     strip-bom "^3.0.0"
 
-tslib@^2.4.0, tslib@^2.4.1, tslib@^2.5.0, tslib@^2.6.1:
+tslib@^2.4.0, tslib@^2.4.1, tslib@^2.5.0, tslib@^2.6.0, tslib@^2.6.1:
   version "2.6.2"
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.6.2.tgz#703ac29425e7b37cd6fd456e92404d46d1f3e4ae"
   integrity sha512-AEYxH93jGFPn/a2iVAwW87VuUIkR1FVUKB77NwMF7nBTDkDrrT/Hpt/IrCJ0QXhW27jTBDcf5ZY7w6RiqTMw2Q==
@@ -4288,6 +4396,11 @@ uri-js@^4.2.2:
   integrity sha512-7rKUyy33Q1yc98pQ1DAmLtwX109F7TIfWlW1Ydo8Wl1ii1SeHieeh0HHfPeL2fMXK6z0s8ecKs9frCuLJvndBg==
   dependencies:
     punycode "^2.1.0"
+
+use-sync-external-store@^1.0.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/use-sync-external-store/-/use-sync-external-store-1.2.0.tgz#7dbefd6ef3fe4e767a0cf5d7287aacfb5846928a"
+  integrity sha512-eEgnFxGQ1Ife9bzYs6VLi8/4X6CObHMw9Qr9tPY43iKwsPw8xE8+EFsf/2cFZ5S3esXgpWgtSCtLNS41F+sKPA==
 
 util-deprecate@^1.0.2:
   version "1.0.2"

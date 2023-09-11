@@ -8,9 +8,6 @@ import { styled } from 'styled-components';
 
 
 
- var blob, mediaRecorder = null
-    var chunks: any = []
-
 
 const Recorder = () => {
 
@@ -18,7 +15,7 @@ const Recorder = () => {
         <RecorderWrapper>
             <Title> Screen recorder  </Title>
 
-            <Recorder2/>
+            {/* <Recorder2/> */}
           
         </RecorderWrapper>
 

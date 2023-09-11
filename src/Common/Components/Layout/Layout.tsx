@@ -26,7 +26,7 @@ const StyledWrapper = styled.div`
   flex-direction: column;
   align-items: center;
 
-  background: ${colorsTheme.colors.dark['700']};
+  /* background: ${colorsTheme.colors.dark['700']}; */
   color: ${colorsTheme.colors.light[100]};
 `
 

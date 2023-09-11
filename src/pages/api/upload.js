@@ -25,6 +25,7 @@ export const config = {
     const fileStr = req.body.data;
   
     if (req.method === 'POST') {
+      
       try {
         const uploadedResponse = await cloudinary.uploader.upload_large(fileStr, {
           resource_type: 'video',
@@ -33,10 +34,11 @@ export const config = {
         console.log('uploaded_url', uploadedResponse.secure_url);
         uploaded_url = uploadedResponse.secure_url;
       } catch (error) {
+        debugger
         res.status(500).json({ error: 'Something wrong' });
       }
       console.log('objects', uploaded_url);
-      // res.writeHead(200, { 'Content-Type': 'text/event-stream' });
+      res.writeHead(200, { 'Content-Type': 'text/event-stream' });
   
       res.status(200).json({ data: uploaded_url });
     }

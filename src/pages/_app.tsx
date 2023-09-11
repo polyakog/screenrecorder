@@ -39,6 +39,7 @@ export default App
 
 const GlobalStyle = createGlobalStyle`
   *{
+     
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -54,7 +55,12 @@ const GlobalStyle = createGlobalStyle`
 
   html{
     height:100vh;
-    background:black;
+    background: ${colorsTheme.colors.dark[900]};
+
+    display: inline-flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
     
     /* &::-webkit-scrollbar {
   width: 10px;
