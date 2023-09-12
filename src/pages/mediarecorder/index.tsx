@@ -5,8 +5,6 @@ import { colorsTheme } from "@/styles/StyledComponents/Common/colors";
 import { styled } from 'styled-components';
 import { getLayout } from '@/Common/Components/Layout/BaseLayout/BaseLayout';
 import RecordView from "@/Common/Components/Record/RecorderNew";
-import { ReactMediaRecorder } from "react-media-recorder-2";
-
 
 
 const MediaRecorder = () => {

@@ -1,11 +1,15 @@
 
 import { Button } from "@mui/material";
 import React, { useEffect, useRef, useState } from "react";
-import { ReactMediaRecorder } from "react-media-recorder-2";
 import { ThemeButton } from '@/Common/Enum/themeButton';
 import styled from "styled-components";
 import { colorsTheme } from '@/styles/StyledComponents/Common/colors';
 import VideoPreview from './VideoPreview'
+import dynamic from "next/dynamic";
+
+const ReactMediaRecorder = dynamic(() => import('react-media-recorder').then((mod) => mod.ReactMediaRecorder), {
+    ssr: false,
+  });
 
 
 
@@ -26,7 +30,7 @@ type PropsType = {
 const RecordView = () => {
 
     const [link, setLink] = useState();
-    let arr: any = []
+    let arr: any[] = []
 
     const handleSaveRecording = async (mediaBlobUrl: string | undefined) => {
 
@@ -41,15 +45,16 @@ const RecordView = () => {
         reader.onloadend = function () {
 
             let base64data = reader.result;
-
-            handleUpload(base64data);
+            let newvideo = base64data?.slice(0,5)
+            
+            handleUpload(newvideo!);
 
         }
     }
 
     const handleUpload = async (video: string | ArrayBuffer | null) => {
         
-        console.log('upload video', video);
+        console.log('upload video дата', JSON.stringify({ video }));
         try {
             fetch("/api/upload", {
                 method: "POST",
@@ -59,12 +64,14 @@ const RecordView = () => {
                   }),
             })
                 .then((response) => {
-                    console.log("response", response.status)
+                    console.log("response ПРИШЕЛ", response)
                     response.json()
                         .then((data) => {
-                            console.log("data from response:",data)
+                            console.log("data from response:", data)
                             arr.push(data)
-                            setLink(arr[0].data)
+                            setLink(arr[0])
+                            // setLink(arr[0].data)
+                            
 
                         });
                 })
