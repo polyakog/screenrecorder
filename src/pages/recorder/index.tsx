@@ -15,7 +15,7 @@ const Recorder = () => {
         <RecorderWrapper>
             <Title> Screen recorder  </Title>
 
-            <ScreenRecorder/>
+            {/* <ScreenRecorder/> */}
           
         </RecorderWrapper>
 
