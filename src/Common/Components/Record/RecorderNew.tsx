@@ -6,10 +6,16 @@ import styled from "styled-components";
 import { colorsTheme } from '@/styles/StyledComponents/Common/colors';
 import VideoPreview from './VideoPreview'
 import dynamic from "next/dynamic";
+import RadioButtonCheckedRoundedIcon from '@mui/icons-material/RadioButtonCheckedRounded';
+import MicTwoToneIcon from '@mui/icons-material/MicTwoTone';
+import MicOffTwoToneIcon from '@mui/icons-material/MicOffTwoTone';
+import Icon from '@mui/material/Icon';
+import { green, red, grey } from '@mui/material/colors';
+
 
 const ReactMediaRecorder = dynamic(() => import('react-media-recorder').then((mod) => mod.ReactMediaRecorder), {
     ssr: false,
-  });
+});
 
 
 
@@ -36,7 +42,7 @@ const RecordView = () => {
 
         let blob = await fetch(mediaBlobUrl!)
             .then(r => r.blob());
-        
+
 
         let reader = new FileReader();
 
@@ -45,23 +51,24 @@ const RecordView = () => {
         reader.onloadend = function () {
 
             let base64data = reader.result;
-            let newvideo = base64data?.slice(0,5)
-            
+            let newvideo = base64data?.slice(5)
+
             handleUpload(newvideo!);
 
         }
     }
 
-    const handleUpload = async (video: string | ArrayBuffer | null) => {
-        
-        console.log('upload video дата', JSON.stringify({ video }));
+    const handleUpload = async (newvideo: string | ArrayBuffer | null) => {
+
+        console.log('upload video req body', JSON.stringify({ data: newvideo }));
+        console.log(JSON.stringify({ data: newvideo }));
         try {
             fetch("/api/upload", {
                 method: "POST",
-                body: JSON.stringify({ data: video }),
+                body: JSON.stringify({ data: newvideo }),
                 headers: new Headers({
                     'Content-Type': 'application/json',
-                  }),
+                }),
             })
                 .then((response) => {
                     console.log("response ПРИШЕЛ", response)
@@ -69,9 +76,8 @@ const RecordView = () => {
                         .then((data) => {
                             console.log("data from response:", data)
                             arr.push(data)
-                            setLink(arr[0])
-                            // setLink(arr[0].data)
-                            
+                            setLink(arr[0].data)
+
 
                         });
                 })
@@ -83,14 +89,20 @@ const RecordView = () => {
         }
     }
 
+    const [isAudio, setIsAudio] = useState(true)
+    const [isDisabled, setIsDisabled] = useState(false)
 
-
+    const handleMute = () => {
+        isAudio ? setIsAudio(false) : setIsAudio(true)
+    }
 
     return (
         <MediaWrapper>
 
             <ReactMediaRecorder
                 video
+                audio={isAudio}
+
                 render={({
                     clearBlobUrl,
                     isAudioMuted,
@@ -105,43 +117,80 @@ const RecordView = () => {
                     unMuteAudio
                 }) => (
                     <div>
-                        <p>STATUS: {status}</p>
-                        <p>link: {link}</p>
+                        {/* <p>STATUS: {status}</p> */}
+
 
                         <VideoBlock>
+
                             {status === "recording" ? (
-                                <VideoScreen>
-                                    <VideoPreview stream={previewStream} />
-                                </VideoScreen>
+                                <>
+                                    <RecordingStyle>
+                                        Запись
+                                        <Icon ><RadioButtonCheckedRoundedIcon sx={{ color: red[800], position: "absolute", top: "5px" }} /></Icon>
+                                    </RecordingStyle>
+
+                                    <VideoScreen>
+                                        <VideoPreview stream={previewStream} />
+                                    </VideoScreen>
+                                </>
+
 
                             ) : (
-                                <VideoScreen>
-                                    <video src={mediaBlobUrl} height={500} width={500} autoPlay controls />
-                                </VideoScreen>
+                                <>
+                                    <VideoScreen>
+                                        <video src={mediaBlobUrl} height={400} width={500} autoPlay controls />
+                                    </VideoScreen>
+                                </>
+
 
                             )}
                         </VideoBlock>
 
 
                         <ButtonsBlock>
+
+                            <Button
+                                color='info'
+                                disabled={isDisabled}
+                                style={{ width: "150px", height: "50px" }}
+                                variant='contained'
+                                onClick={handleMute}>
+                                {isAudio
+                                    ? <Icon ><MicOffTwoToneIcon sx={{ color: (isDisabled ?  grey[600] : red[100]) }} /></Icon>
+                                    : <Icon ><MicTwoToneIcon sx={{  color: (isDisabled ?  grey[600] : green[200]) }} /></Icon>
+                                }
+                            </Button>
+
                             {(status === "idle" || status === "recorder_error") && (
+                               <>
+                               {setIsDisabled(false)}
                                 <Button
-                                    color='primary'
+                                    color='info'
                                     style={{ width: "150px", height: "50px" }}
-                                    variant='outlined'
-                                    onClick={startRecording}>Начать запись</Button>
+                                    variant='contained'
+                                    onClick={startRecording}>
+                                    Начать запись
+                                </Button>
+                               </>
+                              
                             )}
 
 
                             {(status === "recording" || status === "paused") && (
                                 <>
-
-                                    <Button color='primary' variant='outlined' style={{ width: "150px", height: "50px" }} onClick={stopRecording}>Остановить запись</Button>
+                                    {setIsDisabled(true)}
+                                    <Button
+                                        color='primary'
+                                        variant='contained'
+                                        style={{ width: "150px", height: "50px" }}
+                                        onClick={stopRecording}>
+                                        Остановить запись
+                                    </Button>
 
                                     <Button
                                         color='primary'
-                                        variant='outlined'
-                                        style={{ width: "150px" }}
+                                        variant='contained'
+                                        style={{ width: "150px", height: "50px" }}
                                         onClick={() => status === "paused" ? resumeRecording() : pauseRecording()}
                                     >
                                         {status === "paused" ? "Продолжить запись" : "Пауза"}
@@ -151,23 +200,29 @@ const RecordView = () => {
 
                             {status === "stopped" && (
                                 <>
+{setIsDisabled(false)}
+                                    <ViewStyle>
+                                        Записано
+                                        <Icon ><RadioButtonCheckedRoundedIcon sx={{ color: green[800], position: "absolute", top: "5px" }} /></Icon>
+                                    </ViewStyle>
+
                                     <Button
-                                        color='primary'
-                                        variant='outlined'
+                                        color='secondary'
+                                        variant='contained'
                                         style={{ width: "150px", height: "50px" }}
                                         onClick={clearBlobUrl}
                                     >
                                         Очистить запись
                                     </Button>
 
-                                    <Button
+                                    {/* <Button
                                         color='primary'
                                         variant='outlined'
                                         style={{ width: "150px", height: "50px" }}
                                         onClick={() => handleSaveRecording(mediaBlobUrl)}
                                     >
                                         Сохранить запись
-                                    </Button>
+                                    </Button> */}
                                 </>
 
 
@@ -192,22 +247,44 @@ const MediaWrapper = styled.div`
 
   `
 const VideoBlock = styled.div`
-    width: 500px;
-    height: 400px;
+    width: 505px;
+    height: 405px;
 `
 
+
 const VideoScreen = styled.div`
+    display: flex;
+    justify-content: center;
+    flex-wrap:wrap;
+
     width: 100%;
     height: 100%;
     border: 1px solid ${colorsTheme.colors.accent[100]};  
     border-radius: 2px;
+    
     /* height: 500px; */
   `
 
 const ButtonsBlock = styled.div`
     margin-top: 10px;
+    display: inline-flex;  
+    gap: 5px;
+
   `
 
+const RecordingStyle = styled.div`
+    z-index: 5;
+    position:absolute;
+    top: 85px;
+    right: 25%;
+    color: ${red[800]};
+    text-align: center;
+
+`
+
+const ViewStyle = styled(RecordingStyle)`
+    color: ${green[800]};
+`
 
 
 

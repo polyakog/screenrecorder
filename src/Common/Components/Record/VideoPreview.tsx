@@ -15,7 +15,7 @@ const VideoPreview = ({ stream }: { stream: MediaStream | null }) => {
         return null;
     }
 
-    return <video height={500} width={500} ref={videoRef} autoPlay controls />
+    return <video height={400} width={500} ref={videoRef} autoPlay controls />
 
 
 }

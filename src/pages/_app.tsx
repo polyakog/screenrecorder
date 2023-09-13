@@ -49,13 +49,14 @@ const GlobalStyle = createGlobalStyle`
     font-style: normal;
     font-weight: 400;
     line-height: 24px;
-    color: ${colorsTheme.colors.light[100]};
+    /* color: ${colorsTheme.colors.light[500]}; */
 
   }
 
   html{
     height:100vh;
-    background: ${colorsTheme.colors.dark[900]};
+    background-color: ${colorsTheme.colors.dark[700]};
+    color: ${colorsTheme.colors.light[500]};
 
     display: inline-flex;
     flex-wrap: wrap;

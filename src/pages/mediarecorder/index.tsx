@@ -11,7 +11,7 @@ const MediaRecorder = () => {
 
     return (
         <RecorderWrapper>
-            <Title> Video recorder - 2  </Title>
+            <Title> Video recorder </Title>
 
           <RecordView/>
 
@@ -40,7 +40,7 @@ const Title = styled.div`
     text-align: center;
     font-size: 18px;
     font-weight: 700;
-    padding-bottom: 15px;
+    padding-bottom: 45px;
     padding-top: 10px;
 `
 

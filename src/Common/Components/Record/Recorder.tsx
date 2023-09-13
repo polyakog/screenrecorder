@@ -5,7 +5,7 @@ import { useReactMediaRecorder } from "react-media-recorder";
 
 
 
-const Recorder2 = () => {
+const ScreenRecorder = () => {
     const videoRef: any = useRef();
     const [link, setLink] = useState();
     let arr: any = []
@@ -151,4 +151,4 @@ const Recorder2 = () => {
 
 }
 
-export default Recorder2
+export default ScreenRecorder

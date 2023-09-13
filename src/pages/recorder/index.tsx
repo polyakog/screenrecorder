@@ -1,6 +1,6 @@
 import { Button } from "@/Common/Components/Button/Button"
 import { getLayout } from "@/Common/Components/Layout/BaseLayout/BaseLayout";
-import Recorder2 from "@/Common/Components/Record/Recorder";
+import ScreenRecorder from "@/Common/Components/Record/Recorder";
 import { ThemeButton } from "@/Common/Enum/themeButton"
 import { colorsTheme } from "@/styles/StyledComponents/Common/colors";
 import { useState } from "react";
@@ -15,7 +15,7 @@ const Recorder = () => {
         <RecorderWrapper>
             <Title> Screen recorder  </Title>
 
-            {/* <Recorder2/> */}
+            <ScreenRecorder/>
           
         </RecorderWrapper>
 
