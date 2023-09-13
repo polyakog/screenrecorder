@@ -21,19 +21,20 @@ export const config = {
     req,
      res
      ) {
-    // let uploaded_url = '';
-    // let fileStr = req.body.data;
+    let uploaded_url = '';
+    let fileStr = req.body.data;
   debugger
     if (req.method === 'POST') {
       
       try {
-        let fileStr = req.body.data;
+        // let fileStr = req.body.data;
         const uploadedResponse = await cloudinary.uploader.upload_large(fileStr, {
           resource_type: 'video',
           chunk_size: 6000000,
-        });
+      });
         // console.log('uploaded_url', uploadedResponse.secure_url);
-        // uploaded_url = uploadedResponse.secure_url;
+        uploaded_url:UploadApiResponse = uploadedResponse.secure_url;
+        
       } catch (error) {
        
         res.status(500).json({ error: 'Something wrong' });
@@ -41,6 +42,8 @@ export const config = {
       // console.log('objects', uploaded_url);
       // res.writeHead(200, { 'Content-Type': 'text/event-stream' });
   
-      res.status(200).json("backend complete");
+      // res.status(200).json("backend complete");
+      res.status(200).json({data: uploaded_url});
+      // res.status(200).json({ data: uploaded_url });
     }
   }
