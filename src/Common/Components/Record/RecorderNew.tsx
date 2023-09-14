@@ -9,6 +9,8 @@ import dynamic from "next/dynamic";
 import RadioButtonCheckedRoundedIcon from '@mui/icons-material/RadioButtonCheckedRounded';
 import MicTwoToneIcon from '@mui/icons-material/MicTwoTone';
 import MicOffTwoToneIcon from '@mui/icons-material/MicOffTwoTone';
+import VideocamIcon from '@mui/icons-material/Videocam';
+import VideocamOffIcon from '@mui/icons-material/VideocamOff';
 import Icon from '@mui/material/Icon';
 import { green, red, grey } from '@mui/material/colors';
 
@@ -90,17 +92,22 @@ const RecordView = () => {
     }
 
     const [isAudio, setIsAudio] = useState(true)
+    const [isVideo, setIsVideo] = useState(true)
     const [isDisabled, setIsDisabled] = useState(false)
 
     const handleMute = () => {
         isAudio ? setIsAudio(false) : setIsAudio(true)
     }
 
+    const handleOffVideo = () => {
+        isVideo ? setIsVideo(false) : setIsVideo(true)
+    }
+
     return (
         <MediaWrapper>
 
             <ReactMediaRecorder
-                video
+                video={isVideo}
                 audio={isAudio}
 
                 render={({
@@ -152,12 +159,23 @@ const RecordView = () => {
                             <Button
                                 color='info'
                                 disabled={isDisabled}
-                                style={{ width: "150px", height: "50px" }}
+                                style={{ width: "50px", height: "50px" }}
                                 variant='contained'
                                 onClick={handleMute}>
                                 {isAudio
                                     ? <Icon ><MicOffTwoToneIcon sx={{ color: (isDisabled ?  grey[600] : red[100]) }} /></Icon>
                                     : <Icon ><MicTwoToneIcon sx={{  color: (isDisabled ?  grey[600] : green[200]) }} /></Icon>
+                                }
+                            </Button>
+                            <Button
+                                color='info'
+                                disabled={isDisabled}
+                                style={{ width: "50px", height: "50px" }}
+                                variant='contained'
+                                onClick={handleOffVideo}>
+                                {isVideo
+                                    ? <Icon ><VideocamOffIcon sx={{ color: (isDisabled ?  grey[600] : red[100]) }} /></Icon>
+                                    : <Icon ><VideocamIcon sx={{  color: (isDisabled ?  grey[600] : green[200]) }} /></Icon>
                                 }
                             </Button>
 
