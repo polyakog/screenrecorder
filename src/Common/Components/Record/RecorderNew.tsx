@@ -104,7 +104,7 @@ const RecordView = () => {
     const [isVideo, setIsVideo] = useState(true)
     const [isScreen, setIsScreen] = useState(false)
     const [isDisabled, setIsDisabled] = useState(false)
-    const [isVideoVisible, setIsVideoVisible] = useState(true)
+    const [mediaBlobUrl, setMediaBlobUrl] = useState('')
 
     const handleMute = () => {
         isAudio ? setIsAudio(false) : setIsAudio(true)
@@ -127,6 +127,38 @@ const RecordView = () => {
             setIsVideo(false)
         }
     }
+
+    useEffect(()=>{
+        if (mediaBlobUrl) console.log(mediaBlobUrl)
+    },[mediaBlobUrl])
+
+    const handeleSave = async () => {
+        setMediaBlobUrl(mediaBlobUrl!)
+        
+        const Blob = await fetch(mediaBlobUrl).then((r) => r.blob());
+        let fileExt=''
+        let type = ''
+        if (isVideo || isScreen) {
+            fileExt = 'mp4'
+            type = 'video/mp4'
+        } else {
+            fileExt = 'wav'
+            type = 'audio/wav'
+        }
+        
+        const fileName= `record.${fileExt}`
+    const mediaFile = new File([Blob], fileName, { type: type });
+    const formData = new FormData(); // preparing to send to the server
+
+    formData.append('file', mediaFile);  // preparing to send to the server
+
+    // onSaveAudio(formData); // sending to the server
+    console.log(mediaFile); // sending to the server
+    console.log(formData); // sending to the server
+
+    }
+
+
 
 
 
@@ -293,6 +325,16 @@ const RecordView = () => {
                                     >
                                         <Icon ><RefreshIcon sx={{ color: 'white' }} /></Icon>
                                         Новая запись
+                                    </Button>
+
+                                    <Button
+                                        color='primary'
+                                        variant='contained'
+                                        style={{ width: "150px", height: "50px" }}
+                                        onClick={handeleSave}
+                                    >
+                                        <Icon ><RefreshIcon sx={{ color: 'white' }} /></Icon>
+                                        Сохранить
                                     </Button>
 
                                     {/* <Button
