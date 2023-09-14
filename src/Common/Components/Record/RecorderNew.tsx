@@ -11,6 +11,15 @@ import MicTwoToneIcon from '@mui/icons-material/MicTwoTone';
 import MicOffTwoToneIcon from '@mui/icons-material/MicOffTwoTone';
 import VideocamIcon from '@mui/icons-material/Videocam';
 import VideocamOffIcon from '@mui/icons-material/VideocamOff';
+import CameraIcon from '@mui/icons-material/Camera';
+import PauseCircleFilledIcon from '@mui/icons-material/PauseCircleFilled';
+import StopCircleIcon from '@mui/icons-material/StopCircle';
+
+import ScreenShareTwoToneIcon from '@mui/icons-material/ScreenShareTwoTone';
+import StopScreenShareTwoToneIcon from '@mui/icons-material/StopScreenShareTwoTone';
+import VideoLabelIcon from '@mui/icons-material/VideoLabel';
+import RefreshIcon from '@mui/icons-material/Refresh';
+
 import Icon from '@mui/material/Icon';
 import { green, red, grey } from '@mui/material/colors';
 
@@ -93,15 +102,33 @@ const RecordView = () => {
 
     const [isAudio, setIsAudio] = useState(true)
     const [isVideo, setIsVideo] = useState(true)
+    const [isScreen, setIsScreen] = useState(false)
     const [isDisabled, setIsDisabled] = useState(false)
+    const [isVideoVisible, setIsVideoVisible] = useState(true)
 
     const handleMute = () => {
         isAudio ? setIsAudio(false) : setIsAudio(true)
     }
 
-    const handleOffVideo = () => {
-        isVideo ? setIsVideo(false) : setIsVideo(true)
+    const handleVideoOff = () => {
+        if (isVideo) {
+            setIsVideo(false)
+        } else {
+            setIsVideo(true)
+            setIsScreen(false)
+        }
     }
+
+    const handleScreenOff = () => {
+        if (isScreen) {
+            setIsScreen(false)
+        } else {
+            setIsScreen(true)
+            setIsVideo(false)
+        }
+    }
+
+
 
     return (
         <MediaWrapper>
@@ -109,6 +136,7 @@ const RecordView = () => {
             <ReactMediaRecorder
                 video={isVideo}
                 audio={isAudio}
+                screen={isScreen}
 
                 render={({
                     clearBlobUrl,
@@ -154,43 +182,61 @@ const RecordView = () => {
                         </VideoBlock>
 
 
-                        <ButtonsBlock>
 
+                        <ButtonsBlock>
                             <Button
-                                color='info'
+                                color={isAudio? 'secondary' : 'info'}
                                 disabled={isDisabled}
                                 style={{ width: "50px", height: "50px" }}
                                 variant='contained'
                                 onClick={handleMute}>
                                 {isAudio
-                                    ? <Icon ><MicOffTwoToneIcon sx={{ color: (isDisabled ?  grey[600] : red[100]) }} /></Icon>
-                                    : <Icon ><MicTwoToneIcon sx={{  color: (isDisabled ?  grey[600] : green[200]) }} /></Icon>
-                                }
-                            </Button>
-                            <Button
-                                color='info'
-                                disabled={isDisabled}
-                                style={{ width: "50px", height: "50px" }}
-                                variant='contained'
-                                onClick={handleOffVideo}>
-                                {isVideo
-                                    ? <Icon ><VideocamOffIcon sx={{ color: (isDisabled ?  grey[600] : red[100]) }} /></Icon>
-                                    : <Icon ><VideocamIcon sx={{  color: (isDisabled ?  grey[600] : green[200]) }} /></Icon>
+                                    ? <Icon ><MicOffTwoToneIcon sx={{ color: (isDisabled ? grey[600] : red[100]) }} /></Icon>
+                                    : <Icon ><MicTwoToneIcon sx={{ color: (isDisabled ? grey[600] : green[200]) }} /></Icon>
                                 }
                             </Button>
 
+                            <Button
+                                color={isVideo ? 'secondary' : 'info'}
+                                disabled={isDisabled}
+                                style={{ width: "50px", height: "50px" }}
+                                variant='contained'
+                                onClick={handleVideoOff}>
+                                {isVideo
+                                    ? <Icon ><VideocamOffIcon sx={{ color: (isDisabled ? grey[600] : red[100]) }} /></Icon>
+                                    : <Icon ><VideocamIcon sx={{ color: (isDisabled ? grey[600] : green[200]) }} /></Icon>
+                                }
+                            </Button>
+
+                            <Button
+                                color= {isScreen? 'secondary' : 'info'}
+                                disabled={isDisabled}
+                                style={{ width: "50px", height: "50px" }}
+                                variant='contained'
+                                onClick={handleScreenOff}>
+                                {isScreen
+                                    ? <Icon ><StopScreenShareTwoToneIcon sx={{ color: (isDisabled ? grey[600] : red[100]) }} /></Icon>
+                                    : <Icon ><ScreenShareTwoToneIcon sx={{ color: (isDisabled ? grey[600] : green[200]) }} /></Icon>
+                                }
+                            </Button>
+
+
+
                             {(status === "idle" || status === "recorder_error") && (
-                               <>
-                               {setIsDisabled(false)}
-                                <Button
-                                    color='info'
-                                    style={{ width: "150px", height: "50px" }}
-                                    variant='contained'
-                                    onClick={startRecording}>
-                                    Начать запись
-                                </Button>
-                               </>
-                              
+                                <>
+                                    {setIsDisabled(false)}
+                                    <Button
+                                        color='info'
+                                        style={{ width: "150px", height: "50px" }}
+                                        variant='contained'
+                                        onClick={startRecording}>
+
+                                        <Icon ><CameraIcon sx={{ color: 'white' }} /></Icon>
+
+                                        Начать запись
+                                    </Button>
+                                </>
+
                             )}
 
 
@@ -202,35 +248,51 @@ const RecordView = () => {
                                         variant='contained'
                                         style={{ width: "150px", height: "50px" }}
                                         onClick={stopRecording}>
+
+                                        <Icon ><StopCircleIcon sx={{ color: 'white' }} /></Icon>
                                         Остановить запись
                                     </Button>
 
                                     <Button
-                                        color='primary'
+                                        color={(isVideo || isScreen) ? 'secondary' : 'primary'}
                                         variant='contained'
                                         style={{ width: "150px", height: "50px" }}
                                         onClick={() => status === "paused" ? resumeRecording() : pauseRecording()}
                                     >
-                                        {status === "paused" ? "Продолжить запись" : "Пауза"}
+
+                                        {status === "paused"
+                                            ? <>
+                                                <Icon ><RadioButtonCheckedRoundedIcon sx={{ color: 'white' }} /></Icon>
+
+                                                Продолжить запись
+                                            </>
+                                            : (<>
+                                                <Icon ><PauseCircleFilledIcon sx={{ color: 'white' }} /></Icon>
+                                                {' Пауза'}
+                                            </>
+
+                                            )
+                                        }
                                     </Button>
                                 </>
                             )}
 
                             {status === "stopped" && (
                                 <>
-{setIsDisabled(false)}
+                                    {setIsDisabled(false)}
                                     <ViewStyle>
                                         Записано
                                         <Icon ><RadioButtonCheckedRoundedIcon sx={{ color: green[800], position: "absolute", top: "5px" }} /></Icon>
                                     </ViewStyle>
 
                                     <Button
-                                        color='secondary'
+                                        color='primary'
                                         variant='contained'
                                         style={{ width: "150px", height: "50px" }}
                                         onClick={clearBlobUrl}
                                     >
-                                        Очистить запись
+                                        <Icon ><RefreshIcon sx={{ color: 'white' }} /></Icon>
+                                        Новая запись
                                     </Button>
 
                                     {/* <Button

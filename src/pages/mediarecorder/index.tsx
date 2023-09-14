@@ -11,7 +11,7 @@ const MediaRecorder = () => {
 
     return (
         <RecorderWrapper>
-            <Title> Video recorder </Title>
+            <Title> Video-Audio-Screen recorder </Title>
 
           <RecordView/>
 
