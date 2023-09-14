@@ -15,12 +15,12 @@ export default function Home() {
   const router = useRouter()
   return (
     <Modal>
-      <Title>VIDEO - SCREEN RECORDER</Title>
-      Record your video from screen or camera
+      <Title>VIDEO -AUDIO - SCREEN RECORDER</Title>
+      Record your video or audio from screen or camera
 
       <ButtonBlock>
-        <Button color='primary' variant='contained' onClick={() => router.push(Path.RECORDER)}>Screen Recorder</Button>
-        <Button color='primary' variant='contained' onClick={() => router.push(Path.MEDIARECORDER)}>Video Camera Recorder</Button>
+        {/* <Button color='primary' variant='contained' onClick={() => router.push(Path.RECORDER)}>Screen Recorder</Button> */}
+        <Button color='primary' variant='contained' onClick={() => router.push(Path.MEDIARECORDER)}>To Recorder</Button>
 
       </ButtonBlock>
     </Modal>
