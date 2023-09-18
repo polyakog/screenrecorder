@@ -22,6 +22,18 @@ import RefreshIcon from '@mui/icons-material/Refresh';
 
 import Icon from '@mui/material/Icon';
 import { green, red, grey } from '@mui/material/colors';
+import { ProgressBar } from "../ProgressBar/ProgressBar";
+import { v4 as uuidv4 } from "uuid";
+import { initializeApp } from "firebase/app";
+import {
+    getStorage,
+    ref,
+    listAll,
+    getDownloadURL,
+    getMetadata,
+    deleteObject,
+    uploadBytesResumable,
+} from "firebase/storage";
 
 
 const ReactMediaRecorder = dynamic(() => import('react-media-recorder').then((mod) => mod.ReactMediaRecorder), {
@@ -44,61 +56,34 @@ type PropsType = {
     unmuteAudio: () => void,
 }
 
+type FileType = {
+    name: string,
+    type: string,
+    size: number,
+    url: string | ArrayBuffer | null
+    ref: null,
+    blob: Blob,
+    id: string,
+    loaded: number | null
+}
+
+const firebaseConfig = {
+    apiKey: "AIzaSyA08OwAvg52Iq-D4h9-ili0RPzYCmgWti8",
+    authDomain: "videorecorder-2c600.firebaseapp.com",
+    projectId: "videorecorder-2c600",
+    storageBucket: "videorecorder-2c600.appspot.com",
+    messagingSenderId: "185203219666",
+    appId: "1:185203219666:web:b9d1a0fe4b035258e7a10b"
+};
+
+const app = initializeApp(firebaseConfig);
+const storage = getStorage(app);
+
+
 const RecordView = () => {
 
     const [link, setLink] = useState();
     let arr: any[] = []
-
-    const handleSaveRecording = async (mediaBlobUrl: string | undefined) => {
-
-        let blob = await fetch(mediaBlobUrl!)
-            .then(r => r.blob());
-
-
-        let reader = new FileReader();
-
-        reader.readAsDataURL(blob);
-
-        reader.onloadend = function () {
-
-            let base64data = reader.result;
-            let newvideo = base64data?.slice(5)
-
-            handleUpload(newvideo!);
-
-        }
-    }
-
-    const handleUpload = async (newvideo: string | ArrayBuffer | null) => {
-
-        console.log('upload video req body', JSON.stringify({ data: newvideo }));
-        console.log(JSON.stringify({ data: newvideo }));
-        try {
-            fetch("/api/upload", {
-                method: "POST",
-                body: JSON.stringify({ data: newvideo }),
-                headers: new Headers({
-                    'Content-Type': 'application/json',
-                }),
-            })
-                .then((response) => {
-                    console.log("response ПРИШЕЛ", response)
-                    response.json()
-                        .then((data) => {
-                            console.log("data from response:", data)
-                            arr.push(data)
-                            setLink(arr[0].data)
-
-
-                        });
-                })
-                .catch((err) =>
-                    console.log("err", err)
-                )
-        } catch (error) {
-            console.error("catch error", error);
-        }
-    }
 
     const [isAudio, setIsAudio] = useState(true)
     const [isVideo, setIsVideo] = useState(true)
@@ -106,6 +91,120 @@ const RecordView = () => {
     const [isDisabled, setIsDisabled] = useState(false)
     const [mediaBlobUrl, setMediaBlobUrl] = useState('')
     const [uploadURL, setUploadURL] = useState("");
+    const [percentage, setPercentage] = useState(0)
+    const [file, setFile] = useState<FileType>()
+
+    // ------------------uploader-------------------
+
+    const handleSaveRecording = async (mediaBlobUrl: string | undefined) => {
+        if (!mediaBlobUrl) return null
+        else {
+
+            let blob = await fetch(mediaBlobUrl!)
+                .then(r => r.blob());
+
+
+            let fileReader = new FileReader();
+
+            fileReader.readAsDataURL(blob);
+
+
+            fileReader.onloadend = () => {
+                const fileName = [...mediaBlobUrl.split("/")].reverse()[0]
+                const ext = blob.type.slice(6)
+                setFile(() => {
+                    return {
+                        name: `${fileName}.${ext}`,
+                        type: blob.type,
+                        size: blob.size,
+                        url: fileReader.result,
+                        ref: null,
+                        blob,
+                        id: uuidv4(),
+                        loaded: null
+                    }
+                })
+
+
+                // let base64data = fileReader.result;
+                // let newvideo = base64data?.slice(5)
+
+                // handleUpload(newvideo!);
+            }
+
+
+
+        }
+
+
+    }
+
+    useEffect(() => {
+        console.log('file')
+        console.log(file)
+        console.log(file?.type)
+
+        handleUpload()
+    }, [file])
+
+
+    const handleUpload = () => {
+
+        if (file) {
+            const path = (file.type === "audio/wav" ? "audio/" : "video/")
+            const storageRef = ref(storage, path + file.name);
+            const uploadTask = uploadBytesResumable(storageRef, file.blob, {
+                customMetadata: {
+                    'id': file.id
+                }
+            });
+            console.log('stored to cloud')
+            uploadTask.on("state_changed",
+                (snapshot) => {
+                    // setVideo((prevState) => {
+                    //     let temp
+                    //     return temp = { ...video, loaded: snapshot.bytesTransferred }
+                    // })
+                    const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+                    setPercentage(progress)
+                },
+                (error) => console.log(error))
+        }
+
+    }
+
+    // const handleUpload = async (newvideo: string | ArrayBuffer | null) => {
+
+    //     console.log('upload video req body', JSON.stringify({ data: newvideo }));
+    //     console.log(JSON.stringify({ data: newvideo }));
+    //     try {
+    //         fetch("/api/upload", {
+    //             method: "POST",
+    //             body: JSON.stringify({ data: newvideo }),
+    //             headers: new Headers({
+    //                 'Content-Type': 'application/json',
+    //             }),
+    //         })
+    //             .then((response) => {
+    //                 console.log("response ПРИШЕЛ", response)
+    //                 response.json()
+    //                     .then((data) => {
+    //                         console.log("data from response:", data)
+    //                         arr.push(data)
+    //                         setLink(arr[0].data)
+
+
+    //                     });
+    //             })
+    //             .catch((err) =>
+    //                 console.log("err", err)
+    //             )
+    //     } catch (error) {
+    //         console.error("catch error", error);
+    //     }
+    // }
+
+   
 
     const handleMute = () => {
         isAudio ? setIsAudio(false) : setIsAudio(true)
@@ -134,68 +233,67 @@ const RecordView = () => {
         if (mediaBlobUrl) console.log(mediaBlobUrl)
     }, [mediaBlobUrl])
 
-    const upload = async () => {
-        // setUploaded(true);
-        if (mediaBlobUrl) {
-            const fileName = [...mediaBlobUrl.split("/")].reverse()[0];
-            const videoBlob = await fetch(mediaBlobUrl).then((r) => r.blob());
-            const formData = new FormData();
+    // const upload = async () => {
+    //     // setUploaded(true);
+    //     if (mediaBlobUrl) {
+    //         const fileName = [...mediaBlobUrl.split("/")].reverse()[0];
+    //         const videoBlob = await fetch(mediaBlobUrl).then((r) => r.blob());
+    //         const formData = new FormData();
 
-            formData.append("file", videoBlob, `${fileName}.mp4`);
+    //         formData.append("file", videoBlob, `${fileName}.mp4`);
 
-            fetch("https://root-grizzled-philodendron.glitch.me/upload", {
-                method: "POST",
-                mode: "cors",
-                body: formData
-            })
-                .then((res) => res.json())
-                .then((r) => {
-                    setUploadURL(r.url);
-                })
-                .catch((e) => console.error(e));
-        }
-    };
-
-
-    const handeleSave = async (neWMediaBlobUrl: string) => {
-        setMediaBlobUrl(neWMediaBlobUrl)
+    //         fetch("https://root-grizzled-philodendron.glitch.me/upload", {
+    //             method: "POST",
+    //             mode: "cors",
+    //             body: formData
+    //         })
+    //             .then((res) => res.json())
+    //             .then((r) => {
+    //                 setUploadURL(r.url);
+    //             })
+    //             .catch((e) => console.error(e));
+    //     }
+    // };
 
 
-        const Blob = await fetch(neWMediaBlobUrl).then((r) => r.blob());
-        let fileExt = ''
-        let type = ''
-        if (isVideo || isScreen) {
-            fileExt = 'mp4'
-            type = 'video/mp4'
-        } else {
-            fileExt = 'wav'
-            type = 'audio/wav'
-        }
+    // const handeleSave = async (neWMediaBlobUrl: string) => {
+    //     setMediaBlobUrl(neWMediaBlobUrl)
 
-        const fileName = `${[...mediaBlobUrl.split("/")].reverse()[0]}.${fileExt}`
-        // const mediaFile = new File([Blob], fileName, { type: type });
-        const formData = new FormData(); // preparing to send to the server
+    //     const Blob = await fetch(neWMediaBlobUrl).then((r) => r.blob());
+    //     let fileExt = ''
+    //     let type = ''
+    //     if (isVideo || isScreen) {
+    //         fileExt = 'mp4'
+    //         type = 'video/mp4'
+    //     } else {
+    //         fileExt = 'wav'
+    //         type = 'audio/wav'
+    //     }
 
-        formData.append('file', Blob, fileName);  // preparing to send to the server
+    //     const fileName = `${[...mediaBlobUrl.split("/")].reverse()[0]}.${fileExt}`
+    //     // const mediaFile = new File([Blob], fileName, { type: type });
+    //     const formData = new FormData(); // preparing to send to the server
 
-        onSaveMedia(formData); // sending to the server        
+    //     formData.append('file', Blob, fileName);  // preparing to send to the server
 
-    }
+    //     onSaveMedia(formData); // sending to the server        
 
-    const onSaveMedia = (formData: FormData) => {
-        // fetch("https://root-grizzled-philodendron.glitch.me/upload", {
-        fetch("/api/upload", {
-            method: "POST",
-            mode: "cors",
-            body: formData
-        })
-            .then((res) => res.json())
-            .then((r) => {
-                setUploadURL(r.url);
-            })
-            .catch((e) => console.error(e));
+    // }
 
-    }
+    // const onSaveMedia = (formData: FormData) => {
+    //     // fetch("https://root-grizzled-philodendron.glitch.me/upload", {
+    //     fetch("/api/upload", {
+    //         method: "POST",
+    //         mode: "cors",
+    //         body: formData
+    //     })
+    //         .then((res) => res.json())
+    //         .then((r) => {
+    //             setUploadURL(r.url);
+    //         })
+    //         .catch((e) => console.error(e));
+
+    // }
 
 
 
@@ -227,6 +325,7 @@ const RecordView = () => {
                     <div>
                         {/* <p>STATUS: {status}</p> */}
                         URL:{uploadURL}
+                        <ProgressBar percentage={percentage}/>
 
                         <VideoBlock>
 
@@ -372,10 +471,10 @@ const RecordView = () => {
                                         color='primary'
                                         variant='contained'
                                         style={{ width: "150px", height: "50px" }}
-                                        onClick={() => handeleSave(mediaBlobUrl!)}
+                                        onClick={() => handleSaveRecording(mediaBlobUrl!)}
                                     >
                                         <Icon ><RefreshIcon sx={{ color: 'white' }} /></Icon>
-                                        Сохранить
+                                        Сохранить в облако
                                     </Button>
 
                                     {/* <Button

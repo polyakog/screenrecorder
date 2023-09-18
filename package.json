@@ -36,9 +36,11 @@
     "sharp": "^0.32.5",
     "styled-components": "^6.0.7",
     "tailwindcss": "3.3.3",
-    "typescript": "5.2.2"
+    "typescript": "5.2.2",
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
-    "@types/nprogress": "^0.2.0"
+    "@types/nprogress": "^0.2.0",
+    "@types/uuid": "^9.0.4"
   }
 }
