@@ -23,7 +23,7 @@ export const config = {
      ) {
     let uploaded_url = '';
     let fileStr = req.body.data;
-  debugger
+  
     if (req.method === 'POST') {
       
       try {
@@ -33,7 +33,7 @@ export const config = {
           chunk_size: 6000000,
       });
         // console.log('uploaded_url', uploadedResponse.secure_url);
-        uploaded_url:UploadApiResponse = uploadedResponse.secure_url;
+        uploaded_url = uploadedResponse.secure_url;
         
       } catch (error) {
        

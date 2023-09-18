@@ -105,6 +105,7 @@ const RecordView = () => {
     const [isScreen, setIsScreen] = useState(false)
     const [isDisabled, setIsDisabled] = useState(false)
     const [mediaBlobUrl, setMediaBlobUrl] = useState('')
+    const [uploadURL, setUploadURL] = useState("");
 
     const handleMute = () => {
         isAudio ? setIsAudio(false) : setIsAudio(true)
@@ -113,9 +114,10 @@ const RecordView = () => {
     const handleVideoOff = () => {
         if (isVideo) {
             setIsVideo(false)
+            setIsScreen(false)
         } else {
             setIsVideo(true)
-            setIsScreen(false)
+
         }
     }
 
@@ -124,19 +126,43 @@ const RecordView = () => {
             setIsScreen(false)
         } else {
             setIsScreen(true)
-            setIsVideo(false)
+            setIsVideo(true)
         }
     }
 
-    useEffect(()=>{
+    useEffect(() => {
         if (mediaBlobUrl) console.log(mediaBlobUrl)
-    },[mediaBlobUrl])
+    }, [mediaBlobUrl])
 
-    const handeleSave = async () => {
-        setMediaBlobUrl(mediaBlobUrl!)
-        
-        const Blob = await fetch(mediaBlobUrl).then((r) => r.blob());
-        let fileExt=''
+    const upload = async () => {
+        // setUploaded(true);
+        if (mediaBlobUrl) {
+            const fileName = [...mediaBlobUrl.split("/")].reverse()[0];
+            const videoBlob = await fetch(mediaBlobUrl).then((r) => r.blob());
+            const formData = new FormData();
+
+            formData.append("file", videoBlob, `${fileName}.mp4`);
+
+            fetch("https://root-grizzled-philodendron.glitch.me/upload", {
+                method: "POST",
+                mode: "cors",
+                body: formData
+            })
+                .then((res) => res.json())
+                .then((r) => {
+                    setUploadURL(r.url);
+                })
+                .catch((e) => console.error(e));
+        }
+    };
+
+
+    const handeleSave = async (neWMediaBlobUrl: string) => {
+        setMediaBlobUrl(neWMediaBlobUrl)
+
+
+        const Blob = await fetch(neWMediaBlobUrl).then((r) => r.blob());
+        let fileExt = ''
         let type = ''
         if (isVideo || isScreen) {
             fileExt = 'mp4'
@@ -145,18 +171,33 @@ const RecordView = () => {
             fileExt = 'wav'
             type = 'audio/wav'
         }
-        
-        const fileName= `record.${fileExt}`
-    const mediaFile = new File([Blob], fileName, { type: type });
-    const formData = new FormData(); // preparing to send to the server
 
-    formData.append('file', mediaFile);  // preparing to send to the server
+        const fileName = `${[...mediaBlobUrl.split("/")].reverse()[0]}.${fileExt}`
+        // const mediaFile = new File([Blob], fileName, { type: type });
+        const formData = new FormData(); // preparing to send to the server
 
-    // onSaveAudio(formData); // sending to the server
-    console.log(mediaFile); // sending to the server
-    console.log(formData); // sending to the server
+        formData.append('file', Blob, fileName);  // preparing to send to the server
+
+        onSaveMedia(formData); // sending to the server        
 
     }
+
+    const onSaveMedia = (formData: FormData) => {
+        // fetch("https://root-grizzled-philodendron.glitch.me/upload", {
+        fetch("/api/upload", {
+            method: "POST",
+            mode: "cors",
+            body: formData
+        })
+            .then((res) => res.json())
+            .then((r) => {
+                setUploadURL(r.url);
+            })
+            .catch((e) => console.error(e));
+
+    }
+
+
 
 
 
@@ -185,7 +226,7 @@ const RecordView = () => {
                 }) => (
                     <div>
                         {/* <p>STATUS: {status}</p> */}
-
+                        URL:{uploadURL}
 
                         <VideoBlock>
 
@@ -217,7 +258,7 @@ const RecordView = () => {
 
                         <ButtonsBlock>
                             <Button
-                                color={isAudio? 'secondary' : 'info'}
+                                color={isAudio ? 'secondary' : 'info'}
                                 disabled={isDisabled}
                                 style={{ width: "50px", height: "50px" }}
                                 variant='contained'
@@ -241,7 +282,7 @@ const RecordView = () => {
                             </Button>
 
                             <Button
-                                color= {isScreen? 'secondary' : 'info'}
+                                color={isScreen ? 'secondary' : 'info'}
                                 disabled={isDisabled}
                                 style={{ width: "50px", height: "50px" }}
                                 variant='contained'
@@ -331,7 +372,7 @@ const RecordView = () => {
                                         color='primary'
                                         variant='contained'
                                         style={{ width: "150px", height: "50px" }}
-                                        onClick={handeleSave}
+                                        onClick={() => handeleSave(mediaBlobUrl!)}
                                     >
                                         <Icon ><RefreshIcon sx={{ color: 'white' }} /></Icon>
                                         Сохранить
