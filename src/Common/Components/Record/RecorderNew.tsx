@@ -70,7 +70,8 @@ type FileType = {
 
 type FilesSavedType = {
     link: string,
-    fileName: string
+    fileName: string,
+    id: string
 }
 
 const firebaseConfig = {
@@ -88,18 +89,17 @@ const storage = getStorage(app);
 
 const RecordView = () => {
 
-    const [links, setLinks] = useState<FilesSavedType[]>();
-
-
     const [isAudio, setIsAudio] = useState(true)
     const [isVideo, setIsVideo] = useState(true)
     const [isScreen, setIsScreen] = useState(false)
     const [isDisabled, setIsDisabled] = useState(false)
 
-    const [uploadURL, setUploadURL] = useState<string | undefined>(undefined);
-    const [percentage, setPercentage] = useState(0)
+    const [link, setLink] = useState<FilesSavedType | undefined>()
+    const [uploadedLinks, setUploadedLinks] = useState<FilesSavedType[]>([])
+    const [percentage, setPercentage] = useState<number | undefined>()
     const [file, setFile] = useState<FileType>()
-    const filesURL: FilesSavedType[] = []
+
+
 
     // ------------------uploader-------------------
 
@@ -138,15 +138,13 @@ const RecordView = () => {
 
 
         }
-
-
     }
 
-    useEffect(() => {
-        console.log('file')
-        console.log(file)
-        console.log(file?.type)
 
+    useEffect(() => {
+        // console.log('file')
+        // console.log(file)
+        // console.log(file?.type)
         handleUpload()
     }, [file])
 
@@ -171,19 +169,44 @@ const RecordView = () => {
                 },
                 (error) => console.log(error),
                 () => {
-                    // Upload completed successfully, now we can get the download URL
+
+                    // Загрузка URL
                     getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
                         console.log('File available at', downloadURL);
-                        setUploadURL(downloadURL)
+                        if (uploadedLinks) {
+                            console.log(uploadedLinks)
+                        }
+
+                        setLink({ link: downloadURL, fileName: file.name, id: file.id })
+
                     });
                 }
 
             )
-
-
-
         }
     }
+
+
+    useEffect(() => {
+
+        if (!!link?.link) {
+
+            setUploadedLinks([...uploadedLinks, link])
+        }
+
+    }, [link])
+
+
+
+
+
+    const handelClearRec = (clearBlobUrl: () => void) => {
+        clearBlobUrl()
+        setLink(undefined)
+
+    }
+
+
 
 
     const handleMute = () => {
@@ -209,25 +232,6 @@ const RecordView = () => {
         }
     }
 
-    const handelClearRec = (clearBlobUrl: () => void) => {
-        clearBlobUrl()
-        setUploadURL('')
-    }
-
-    useEffect(() => {
-        if (!!uploadURL) {
-            debugger
-            filesURL.push(
-                {link: uploadURL, fileName: file?.name!}
-                
-                )
-            console.log(filesURL)
-            setLinks(filesURL)
-        }
-
-    }, [uploadURL])
-
-
 
     // const upload = async () => {
     //     // setUploaded(true);
@@ -251,8 +255,8 @@ const RecordView = () => {
     //     }
     // };
 
-    
-   
+
+
 
     // useEffect(() => {
     //     if (filesURL.length>0) console.log(filesURL)
@@ -453,27 +457,29 @@ const RecordView = () => {
 
                         </ButtonsBlock>
 
-                        {uploadURL &&
-                            <>
+                        {link &&
+                            <div>
                                 <span>Файл доступен в облаке по ссылке: </span>
 
-                                <a href={uploadURL}>{file?.name}</a>
-                            </>
+                                <a href={link.link}>{link.fileName}</a>
+                            </div>
                         }
 
-                        {links && (
-                            <>
+                        {uploadedLinks.length > 0 && (
+                            <div>
                                 Ранее загруженные файлы:
-                                {links
-                                    .map(f => (
-                                        <>
-                                            - 
-                                            <a href={f.link}>{f.fileName}</a>
-                                            
-                                        </>
-                                    )
-                                    )}
-                            </>
+                                {uploadedLinks.map(file => {
+                                    return <ul key={file.id}>
+                                        <li>
+                                            <a href={file.link}>{file.fileName}</a>
+
+                                        </li>
+
+                                    </ul>
+                                }
+
+                                )}
+                            </div>
 
                         )}
 
