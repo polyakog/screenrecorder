@@ -7,8 +7,7 @@ const VideoPreview = ({ stream }: { stream: MediaStream | null }) => {
 
     useEffect(() => {
         if (videoRef.current && stream) {
-            videoRef.current.srcObject = stream;
-            
+            videoRef.current.srcObject = stream            
         }
     }, [stream])
 

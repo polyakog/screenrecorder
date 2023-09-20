@@ -22,6 +22,19 @@ import RefreshIcon from '@mui/icons-material/Refresh';
 
 import Icon from '@mui/material/Icon';
 import { green, red, grey } from '@mui/material/colors';
+import { ProgressBar } from "../ProgressBar/ProgressBar";
+import { v4 as uuidv4 } from "uuid";
+import { initializeApp } from "firebase/app";
+import {
+    getStorage,
+    ref,
+    listAll,
+    getDownloadURL,
+    getMetadata,
+    deleteObject,
+    uploadBytesResumable,
+} from "firebase/storage";
+
 
 
 const ReactMediaRecorder = dynamic(() => import('react-media-recorder').then((mod) => mod.ReactMediaRecorder), {
@@ -44,67 +57,157 @@ type PropsType = {
     unmuteAudio: () => void,
 }
 
+type FileType = {
+    name: string,
+    type: string,
+    size: number,
+    url: string | ArrayBuffer | null
+    ref: null,
+    blob: Blob,
+    id: string,
+    loaded: number | null
+}
+
+type FilesSavedType = {
+    link: string,
+    fileName: string,
+    id: string
+}
+
+const firebaseConfig = {
+    apiKey: process.env.NEXT_PUBLIC_API_KEY,
+    authDomain: process.env.NEXT_PUBLIC_AUTH_DOMAIN,
+    projectId: process.env.NEXT_PUBLIC_PROJECT_ID,
+    storageBucket: process.env.NEXT_PUBLIC_STORAGE_BUCKET,
+    messagingSenderId: process.env.NEXT_PUBLIC_SENDER_ID,
+    appId: process.env.NEXT_PUBLIC_APP_ID,
+};
+
+const app = initializeApp(firebaseConfig);
+const storage = getStorage(app);
+
+
 const RecordView = () => {
-
-    const [link, setLink] = useState();
-    let arr: any[] = []
-
-    const handleSaveRecording = async (mediaBlobUrl: string | undefined) => {
-
-        let blob = await fetch(mediaBlobUrl!)
-            .then(r => r.blob());
-
-
-        let reader = new FileReader();
-
-        reader.readAsDataURL(blob);
-
-        reader.onloadend = function () {
-
-            let base64data = reader.result;
-            let newvideo = base64data?.slice(5)
-
-            handleUpload(newvideo!);
-
-        }
-    }
-
-    const handleUpload = async (newvideo: string | ArrayBuffer | null) => {
-
-        console.log('upload video req body', JSON.stringify({ data: newvideo }));
-        console.log(JSON.stringify({ data: newvideo }));
-        try {
-            fetch("/api/upload", {
-                method: "POST",
-                body: JSON.stringify({ data: newvideo }),
-                headers: new Headers({
-                    'Content-Type': 'application/json',
-                }),
-            })
-                .then((response) => {
-                    console.log("response ПРИШЕЛ", response)
-                    response.json()
-                        .then((data) => {
-                            console.log("data from response:", data)
-                            arr.push(data)
-                            setLink(arr[0].data)
-
-
-                        });
-                })
-                .catch((err) =>
-                    console.log("err", err)
-                )
-        } catch (error) {
-            console.error("catch error", error);
-        }
-    }
 
     const [isAudio, setIsAudio] = useState(true)
     const [isVideo, setIsVideo] = useState(true)
     const [isScreen, setIsScreen] = useState(false)
     const [isDisabled, setIsDisabled] = useState(false)
-    const [mediaBlobUrl, setMediaBlobUrl] = useState('')
+
+    const [link, setLink] = useState<FilesSavedType | undefined>()
+    const [uploadedLinks, setUploadedLinks] = useState<FilesSavedType[]>([])
+    const [percentage, setPercentage] = useState<number | undefined>()
+    const [file, setFile] = useState<FileType>()
+
+
+
+    // ------------------uploader-------------------
+
+    const handleSaveRecording = async (mediaBlobUrl: string | undefined) => {
+        if (!mediaBlobUrl) return null
+        else {
+
+            let blob = await fetch(mediaBlobUrl!)
+                .then(r => r.blob());
+
+
+            let fileReader = new FileReader();
+
+            fileReader.readAsDataURL(blob);
+
+
+            fileReader.onloadend = () => {
+                const fileName = [...mediaBlobUrl.split("/")].reverse()[0]
+                const ext = blob.type.slice(6)
+                setFile(() => {
+                    return {
+                        name: `${fileName}.${ext}`,
+                        type: blob.type,
+                        size: blob.size,
+                        url: fileReader.result,
+                        ref: null,
+                        blob,
+                        id: uuidv4(),
+                        loaded: null
+                    }
+                })
+
+
+            }
+
+
+
+        }
+    }
+
+
+    useEffect(() => {
+        // console.log('file')
+        // console.log(file)
+        // console.log(file?.type)
+        handleUpload()
+    }, [file])
+
+
+    const handleUpload = () => {
+
+        if (file) {
+            const path = (file.type === "audio/wav" ? "audio/" : "video/")
+            const storageRef = ref(storage, path + file.name);
+
+            const uploadTask = uploadBytesResumable(storageRef, file.blob, {
+                customMetadata: {
+                    'id': file.id
+                }
+            });
+            console.log('stored to cloud')
+
+            uploadTask.on("state_changed",
+                (snapshot) => {
+                    const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+                    setPercentage(progress)
+                },
+                (error) => console.log(error),
+                () => {
+
+                    // Загрузка URL
+                    getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                        console.log('File available at', downloadURL);
+                        if (uploadedLinks) {
+                            console.log(uploadedLinks)
+                        }
+
+                        setLink({ link: downloadURL, fileName: file.name, id: file.id })
+
+                    });
+                }
+
+            )
+        }
+    }
+
+
+    useEffect(() => {
+
+        if (!!link?.link) {
+
+            setUploadedLinks([...uploadedLinks, link])
+        }
+
+    }, [link])
+
+
+
+
+
+    const handelClearRec = (clearBlobUrl: () => void) => {
+        clearBlobUrl()
+        setLink(undefined)
+
+    }
+
+
+
 
     const handleMute = () => {
         isAudio ? setIsAudio(false) : setIsAudio(true)
@@ -113,9 +216,10 @@ const RecordView = () => {
     const handleVideoOff = () => {
         if (isVideo) {
             setIsVideo(false)
+            setIsScreen(false)
         } else {
             setIsVideo(true)
-            setIsScreen(false)
+
         }
     }
 
@@ -124,42 +228,40 @@ const RecordView = () => {
             setIsScreen(false)
         } else {
             setIsScreen(true)
-            setIsVideo(false)
+            setIsVideo(true)
         }
     }
 
-    useEffect(()=>{
-        if (mediaBlobUrl) console.log(mediaBlobUrl)
-    },[mediaBlobUrl])
 
-    const handeleSave = async () => {
-        setMediaBlobUrl(mediaBlobUrl!)
-        
-        const Blob = await fetch(mediaBlobUrl).then((r) => r.blob());
-        let fileExt=''
-        let type = ''
-        if (isVideo || isScreen) {
-            fileExt = 'mp4'
-            type = 'video/mp4'
-        } else {
-            fileExt = 'wav'
-            type = 'audio/wav'
-        }
-        
-        const fileName= `record.${fileExt}`
-    const mediaFile = new File([Blob], fileName, { type: type });
-    const formData = new FormData(); // preparing to send to the server
+    // const upload = async () => {
+    //     // setUploaded(true);
+    //     if (mediaBlobUrl) {
+    //         const fileName = [...mediaBlobUrl.split("/")].reverse()[0];
+    //         const videoBlob = await fetch(mediaBlobUrl).then((r) => r.blob());
+    //         const formData = new FormData();
 
-    formData.append('file', mediaFile);  // preparing to send to the server
+    //         formData.append("file", videoBlob, `${fileName}.mp4`);
 
-    // onSaveAudio(formData); // sending to the server
-    console.log(mediaFile); // sending to the server
-    console.log(formData); // sending to the server
-
-    }
+    //         fetch("https://root-grizzled-philodendron.glitch.me/upload", {
+    //             method: "POST",
+    //             mode: "cors",
+    //             body: formData
+    //         })
+    //             .then((res) => res.json())
+    //             .then((r) => {
+    //                 setUploadURL(r.url);
+    //             })
+    //             .catch((e) => console.error(e));
+    //     }
+    // };
 
 
 
+
+    // useEffect(() => {
+    //     if (filesURL.length>0) console.log(filesURL)
+
+    // }, [filesURL])
 
 
     return (
@@ -186,6 +288,8 @@ const RecordView = () => {
                     <div>
                         {/* <p>STATUS: {status}</p> */}
 
+
+                        <ProgressBar percentage={percentage} />
 
                         <VideoBlock>
 
@@ -217,7 +321,7 @@ const RecordView = () => {
 
                         <ButtonsBlock>
                             <Button
-                                color={isAudio? 'secondary' : 'info'}
+                                color={isAudio ? 'secondary' : 'info'}
                                 disabled={isDisabled}
                                 style={{ width: "50px", height: "50px" }}
                                 variant='contained'
@@ -241,7 +345,7 @@ const RecordView = () => {
                             </Button>
 
                             <Button
-                                color= {isScreen? 'secondary' : 'info'}
+                                color={isScreen ? 'secondary' : 'info'}
                                 disabled={isDisabled}
                                 style={{ width: "50px", height: "50px" }}
                                 variant='contained'
@@ -321,7 +425,7 @@ const RecordView = () => {
                                         color='primary'
                                         variant='contained'
                                         style={{ width: "150px", height: "50px" }}
-                                        onClick={clearBlobUrl}
+                                        onClick={() => handelClearRec(clearBlobUrl)}
                                     >
                                         <Icon ><RefreshIcon sx={{ color: 'white' }} /></Icon>
                                         Новая запись
@@ -331,10 +435,10 @@ const RecordView = () => {
                                         color='primary'
                                         variant='contained'
                                         style={{ width: "150px", height: "50px" }}
-                                        onClick={handeleSave}
+                                        onClick={() => handleSaveRecording(mediaBlobUrl!)}
                                     >
                                         <Icon ><RefreshIcon sx={{ color: 'white' }} /></Icon>
-                                        Сохранить
+                                        Сохранить в облако
                                     </Button>
 
                                     {/* <Button
@@ -352,6 +456,32 @@ const RecordView = () => {
 
 
                         </ButtonsBlock>
+
+                        {link &&
+                            <div>
+                                <span>Файл доступен в облаке по ссылке: </span>
+
+                                <a href={link.link}>{link.fileName}</a>
+                            </div>
+                        }
+
+                        {uploadedLinks.length > 0 && (
+                            <div>
+                                Ранее загруженные файлы:
+                                {uploadedLinks.map(file => {
+                                    return <ul key={file.id}>
+                                        <li>
+                                            <a href={file.link}>{file.fileName}</a>
+
+                                        </li>
+
+                                    </ul>
+                                }
+
+                                )}
+                            </div>
+
+                        )}
 
 
                     </div>

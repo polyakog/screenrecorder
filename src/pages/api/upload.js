@@ -3,9 +3,9 @@
 var cloudinary = require("cloudinary").v2;
 
 cloudinary.config({
-    cloud_name: process.env.CLOUDINARY_NAME,
-    api_key: process.env.CLOUDINARY_API_KEY,
-    api_secret: process.env.CLOUDINARY_API_SECRET,
+    // cloud_name: process.env.CLOUDINARY_NAME,
+    // api_key: process.env.CLOUDINARY_API_KEY,
+    // api_secret: process.env.CLOUDINARY_API_SECRET,
     // upload_preset: process.env.CLOUDINARY_UPLOAD_PRESET,
 });
 
@@ -23,7 +23,7 @@ export const config = {
      ) {
     let uploaded_url = '';
     let fileStr = req.body.data;
-  debugger
+  
     if (req.method === 'POST') {
       
       try {
@@ -33,7 +33,7 @@ export const config = {
           chunk_size: 6000000,
       });
         // console.log('uploaded_url', uploadedResponse.secure_url);
-        uploaded_url:UploadApiResponse = uploadedResponse.secure_url;
+        uploaded_url = uploadedResponse.secure_url;
         
       } catch (error) {
        
