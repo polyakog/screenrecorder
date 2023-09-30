@@ -258,12 +258,6 @@ const RecordView = () => {
 
 
 
-    // useEffect(() => {
-    //     if (filesURL.length>0) console.log(filesURL)
-
-    // }, [filesURL])
-
-
     return (
         <MediaWrapper>
 
@@ -287,9 +281,17 @@ const RecordView = () => {
                 }) => (
                     <div>
                         {/* <p>STATUS: {status}</p> */}
+                        {link &&
+                            <div>
+                                <span>Файл доступен в облаке по ссылке: </span>
 
+                                <a href={link.link}>{link.fileName}</a>
+                            </div>
+                        }
 
                         <ProgressBar percentage={percentage} />
+
+
 
                         <VideoBlock>
 
@@ -457,29 +459,23 @@ const RecordView = () => {
 
                         </ButtonsBlock>
 
-                        {link &&
-                            <div>
-                                <span>Файл доступен в облаке по ссылке: </span>
 
-                                <a href={link.link}>{link.fileName}</a>
-                            </div>
-                        }
 
                         {uploadedLinks.length > 0 && (
-                            <div>
+                            <ListWrapperStyle>
                                 Ранее загруженные файлы:
                                 {uploadedLinks.map(file => {
-                                    return <ul key={file.id}>
+                                    return <ListStyle key={file.id}>
                                         <li>
                                             <a href={file.link}>{file.fileName}</a>
 
                                         </li>
 
-                                    </ul>
+                                    </ListStyle>
                                 }
 
                                 )}
-                            </div>
+                            </ListWrapperStyle>
 
                         )}
 
@@ -536,6 +532,24 @@ const RecordingStyle = styled.div`
 
 const ViewStyle = styled(RecordingStyle)`
     color: ${green[800]};
+`
+const ListWrapperStyle = styled.div`
+    margin-top: 10px;
+    border: 1px solid ${colorsTheme.colors.dark[300]};
+    border-radius: 2px;
+    color: ${colorsTheme.colors.light[700]};
+    padding: 5px 5px;
+`
+
+const ListStyle = styled.ul`
+    margin-left: 25px;
+    color: ${colorsTheme.colors.light[900]};
+
+    & a {
+        color: ${colorsTheme.colors.light[900]};
+    }
+
+
 `
 
 

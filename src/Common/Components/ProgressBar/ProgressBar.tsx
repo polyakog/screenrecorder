@@ -1,17 +1,29 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import scss from "./ProgressBar.module.scss";
 import styled from "styled-components";
 import { colorsTheme } from "@/styles/StyledComponents/Common/colors";
 
 export const ProgressBar = ({ percentage=0 }: {percentage?: number | null}) => {
  const [isCloud, setIsCloud] = useState(false)
- 
+ const [pro, setPro] = useState<number>()
+
+  
+
+  useEffect(()=>{
+const number = Math.floor(percentage!)
+ setPro(number)
+  },[percentage])
+
   if (!percentage) {
     return null;
   }
 
   if (percentage=100) {
-    setTimeout(()=>handleCloud, 2000)
+    setTimeout(()=>{
+       handleCloud()
+       return null;     
+
+    }, 2000)
   }
 
   const handleCloud = () => {
@@ -22,7 +34,7 @@ export const ProgressBar = ({ percentage=0 }: {percentage?: number | null}) => {
 
   return (
     <div className={scss.ProgressBar}>
-      <span>{Math.floor(percentage)}%</span>
+      <span>{pro}%</span>
       <div
         style={{ width: percentage + "%" }}
         className={scss.percentage}
